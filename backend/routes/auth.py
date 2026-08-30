@@ -1,13 +1,9 @@
 from fastapi import APIRouter, HTTPException, status
-from passlib.context import CryptContext
 from database import database
-from models.user import UserModel, UserCreate, UserResponse
+from models.user import UserModel, UserCreate, UserResponse, UserLogin, TokenResponse
+from utils.auth import get_password_hash, verify_password, create_access_token
 
 router = APIRouter()
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
-def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
 
 @router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
 async def register(user_data: UserCreate):
@@ -45,3 +41,26 @@ async def register(user_data: UserCreate):
         email=created_user["email"],
         role=created_user["role"]
     )
+
+@router.post("/login", response_model=TokenResponse)
+async def login(user_data: UserLogin):
+    users_collection = database.get_collection("users")
+    
+    user = await users_collection.find_one({"email": user_data.email})
+    if not user:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="INVALID EMAIL OR PASSWORD."
+        )
+        
+    if not verify_password(user_data.password, user["hashed_password"]):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="INVALID EMAIL OR PASSWORD."
+        )
+        
+    access_token = create_access_token(
+        data={"sub": user["email"], "role": user["role"], "id": str(user["_id"])}
+    )
+    
+    return {"access_token": access_token, "token_type": "bearer"}
