@@ -38,3 +38,6 @@ MONGODB_URI="mongodb+srv://<username>:<password>@<cluster-url>/"
 
 ## Deployment URL
 - **Production URL**: *[TBD - Insert EC2 public URL here upon deployment]*
+
+
+Email: admin@critique.db Password: adminpassword123
