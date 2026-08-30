@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-cr_bg text-cr_green font-mono m-0 p-0;
+    /* Optional: add a grid background pattern for the hacker look */
+    background-image: linear-gradient(rgba(38, 255, 42, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(38, 255, 42, 0.03) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+}
+
+@layer components {
+  /* You can add custom component classes here if needed */
+}
