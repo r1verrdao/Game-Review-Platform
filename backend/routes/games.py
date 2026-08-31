@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List
+from bson import ObjectId
 from database import database
 from models.game import GameCreate, GameResponse
 from utils.auth import get_admin_user, get_current_user
@@ -17,7 +18,11 @@ async def get_games():
             title=game["title"],
             genre=game["genre"],
             difficulty=game["difficulty"],
-            hardware_notes=game.get("hardware_notes")
+            hardware_notes=game.get("hardware_notes"),
+            description=game.get("description"),
+            developer=game.get("developer"),
+            release_date=game.get("release_date"),
+            cover_asset=game.get("cover_asset")
         )
         for game in games
     ]
@@ -38,7 +43,11 @@ async def create_game(game_data: GameCreate, current_admin: dict = Depends(get_a
         "title": game_data.title,
         "genre": game_data.genre,
         "difficulty": game_data.difficulty,
-        "hardware_notes": game_data.hardware_notes
+        "hardware_notes": game_data.hardware_notes,
+        "description": game_data.description,
+        "developer": game_data.developer,
+        "release_date": game_data.release_date,
+        "cover_asset": game_data.cover_asset
     }
     
     result = await games_collection.insert_one(new_game)
@@ -49,5 +58,32 @@ async def create_game(game_data: GameCreate, current_admin: dict = Depends(get_a
         title=created_game["title"],
         genre=created_game["genre"],
         difficulty=created_game["difficulty"],
-        hardware_notes=created_game.get("hardware_notes")
+        hardware_notes=created_game.get("hardware_notes"),
+        description=created_game.get("description"),
+        developer=created_game.get("developer"),
+        release_date=created_game.get("release_date"),
+        cover_asset=created_game.get("cover_asset")
+    )
+
+@router.get("/{id}", response_model=GameResponse)
+async def get_game(id: str):
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=400, detail="Invalid ID format")
+    
+    games_collection = database.get_collection("games")
+    game = await games_collection.find_one({"_id": ObjectId(id)})
+    
+    if not game:
+        raise HTTPException(status_code=404, detail="Game not found")
+        
+    return GameResponse(
+        id=str(game["_id"]),
+        title=game["title"],
+        genre=game["genre"],
+        difficulty=game["difficulty"],
+        hardware_notes=game.get("hardware_notes"),
+        description=game.get("description"),
+        developer=game.get("developer"),
+        release_date=game.get("release_date"),
+        cover_asset=game.get("cover_asset")
     )
