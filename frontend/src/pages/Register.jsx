@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+// import axios from 'axios';
+import api from '../api';
 import { Link } from 'react-router-dom';
 import InputField from '../components/InputField';
 
@@ -37,7 +38,7 @@ const Register = () => {
 
     try {
       // Assuming backend runs on localhost:8000
-      const response = await axios.post('http://localhost:8000/api/register', {
+      const response = await api.post('/register', {
         email,
         password
       });

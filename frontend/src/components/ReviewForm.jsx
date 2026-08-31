@@ -23,7 +23,7 @@ const ReviewForm = ({ gameId, onClose, onSuccess }) => {
     setError('');
 
     try {
-      await api.post('/reviews', {
+      await api.post('/reviews/', {
         game_id: gameId,
         rating: rating,
         content: content.trim()
