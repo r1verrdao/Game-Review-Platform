@@ -3,6 +3,7 @@ from typing import List
 from bson import ObjectId
 from database import database
 from models.game import GameCreate, GameResponse
+from models.review import ReviewResponse
 from utils.auth import get_admin_user, get_current_user
 
 router = APIRouter()
@@ -87,3 +88,24 @@ async def get_game(id: str):
         release_date=game.get("release_date"),
         cover_asset=game.get("cover_asset")
     )
+
+@router.get("/{id}/reviews", response_model=List[ReviewResponse])
+async def get_game_reviews(id: str):
+    if not ObjectId.is_valid(id):
+        raise HTTPException(status_code=400, detail="Invalid ID format")
+    
+    reviews_collection = database.get_collection("reviews")
+    reviews_cursor = reviews_collection.find({"game_id": id}).sort("created_at", -1)
+    reviews = await reviews_cursor.to_list(1000)
+    
+    return [
+        ReviewResponse(
+            id=str(review["_id"]),
+            user_id=review["user_id"],
+            game_id=review["game_id"],
+            rating=review["rating"],
+            content=review["content"],
+            created_at=review["created_at"]
+        )
+        for review in reviews
+    ]
