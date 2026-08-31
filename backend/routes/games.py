@@ -1,9 +1,26 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from typing import List
 from database import database
 from models.game import GameCreate, GameResponse
-from utils.auth import get_admin_user
+from utils.auth import get_admin_user, get_current_user
 
 router = APIRouter()
+
+@router.get("/", response_model=List[GameResponse])
+async def get_games():
+    games_collection = database.get_collection("games")
+    games = await games_collection.find().to_list(1000)
+    
+    return [
+        GameResponse(
+            id=str(game["_id"]),
+            title=game["title"],
+            genre=game["genre"],
+            difficulty=game["difficulty"],
+            hardware_notes=game.get("hardware_notes")
+        )
+        for game in games
+    ]
 
 @router.post("/", response_model=GameResponse, status_code=status.HTTP_201_CREATED)
 async def create_game(game_data: GameCreate, current_admin: dict = Depends(get_admin_user)):

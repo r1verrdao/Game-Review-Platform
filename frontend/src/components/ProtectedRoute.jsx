@@ -1,12 +1,14 @@
 import React, { useContext } from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import Navbar from './Navbar';
+import Footer from './Footer';
 
 const ProtectedRoute = ({ allowedRoles }) => {
   const { user, loading } = useContext(AuthContext);
 
   if (loading) {
-    return <div className="min-h-screen flex items-center justify-center text-cr_green font-mono uppercase tracking-widest">Sys.Status: Authenticating...</div>;
+    return <div className="min-h-screen flex items-center justify-center text-cr_green font-mono uppercase tracking-widest bg-cr_bg">Sys.Status: Authenticating...</div>;
   }
 
   if (!user) {
@@ -19,7 +21,15 @@ const ProtectedRoute = ({ allowedRoles }) => {
     return <Navigate to="/" replace />;
   }
 
-  return <Outlet />;
+  return (
+    <div className="min-h-screen bg-cr_bg flex flex-col">
+      <Navbar />
+      <div className="flex-grow">
+        <Outlet />
+      </div>
+      <Footer />
+    </div>
+  );
 };
 
 export default ProtectedRoute;
