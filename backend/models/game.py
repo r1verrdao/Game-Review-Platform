@@ -23,6 +23,10 @@ class GameModel(BaseModel):
     genre: str
     difficulty: str
     hardware_notes: Optional[str] = None
+    description: Optional[str] = None
+    developer: Optional[str] = None
+    release_date: Optional[str] = None
+    cover_asset: Optional[str] = None
 
     class Config:
         populate_by_name = True
@@ -34,6 +38,10 @@ class GameCreate(BaseModel):
     genre: str
     difficulty: str
     hardware_notes: Optional[str] = None
+    description: Optional[str] = None
+    developer: Optional[str] = None
+    release_date: Optional[str] = None
+    cover_asset: Optional[str] = None
 
 class GameResponse(BaseModel):
     id: str
@@ -41,3 +49,7 @@ class GameResponse(BaseModel):
     genre: str
     difficulty: str
     hardware_notes: Optional[str] = None
+    description: Optional[str] = None
+    developer: Optional[str] = None
+    release_date: Optional[str] = None
+    cover_asset: Optional[str] = None

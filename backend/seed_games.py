@@ -12,21 +12,33 @@ async def seed_games():
     games = [
         {
             "title": "ELDEN RING",
-            "genre": "RPG, ACTION",
+            "genre": "[RPG] [ACTION] [INDEX: EXTREME]",
             "difficulty": "Hard",
-            "hardware_notes": "Requires controller."
+            "hardware_notes": ">\n[CONFIG_OPTIMIZATION] Optimal vibration setup for Flydigi Direwolf controller detected.\n\n> > Enable haptic feedback in Steam Input.\n> > Calibrate deadzones: L_STICK 0.05, R_STICK 0.05.\n\nSTATUS: READY // V_1.04",
+            "description": "The Golden Order has been broken. Rise, Tarnished, and be guided by grace to brandish the power of the Elden Ring and become an Elden Lord in the Lands Between.",
+            "developer": "FROMSOFTWARE",
+            "release_date": "2022",
+            "cover_asset": "https://image.api.playstation.com/vulcan/ap/rnd/202110/2000/phvVT0qZfcXms5kMI2N1cmw7.png"
         },
         {
             "title": "BLOODBORNE",
-            "genre": "SOULSLIKE, HORROR",
+            "genre": "[SOULSLIKE] [HORROR]",
             "difficulty": "Very Hard",
-            "hardware_notes": "PS4 Controller recommended."
+            "hardware_notes": "PS4 Controller recommended.",
+            "description": "Hunt your nightmares as you search for answers in the ancient city of Yharnam, now cursed with a strange endemic illness spreading through the streets like wildfire.",
+            "developer": "FROMSOFTWARE",
+            "release_date": "2015",
+            "cover_asset": "https://image.api.playstation.com/vulcan/img/rnd/202010/2614/FzHAYh70c1DkQ0g2X7p6Nf3Y.jpg"
         },
         {
             "title": "HOLLOW KNIGHT",
-            "genre": "METROIDVANIA, INDIE",
+            "genre": "[METROIDVANIA] [INDIE]",
             "difficulty": "Hard",
-            "hardware_notes": "Keyboard or Controller."
+            "hardware_notes": "Keyboard or Controller.",
+            "description": "Forge your own path in Hollow Knight! An epic action adventure through a vast ruined kingdom of insects and heroes.",
+            "developer": "TEAM CHERRY",
+            "release_date": "2017",
+            "cover_asset": "https://shared.fastly.steamstatic.com/store_item_assets/steam/apps/367520/capsule_616x353.jpg"
         }
     ]
     
