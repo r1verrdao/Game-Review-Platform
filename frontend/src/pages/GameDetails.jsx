@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api';
 import ReviewForm from '../components/ReviewForm';
+import ReviewItem from '../components/ReviewItem';
 
 const GameDetails = () => {
   const { id } = useParams();
@@ -11,6 +12,16 @@ const GameDetails = () => {
   const [error, setError] = useState('');
   const [showReviewModal, setShowReviewModal] = useState(false);
   const [showSuccessToast, setShowSuccessToast] = useState(false);
+  const [reviews, setReviews] = useState([]);
+
+  const fetchReviews = async () => {
+    try {
+      const response = await api.get(`/games/${id}/reviews`);
+      setReviews(response.data);
+    } catch (err) {
+      console.error('Failed to fetch reviews', err);
+    }
+  };
 
   useEffect(() => {
     const fetchGame = async () => {
@@ -25,6 +36,7 @@ const GameDetails = () => {
       }
     };
     fetchGame();
+    fetchReviews();
   }, [id]);
 
   if (loading) {
@@ -94,24 +106,19 @@ const GameDetails = () => {
           <div className="border border-cr_gray p-6 relative bg-cr_bg/80 backdrop-blur-sm">
             <h2 className="text-xl font-bold mb-6 text-white border-b border-cr_gray pb-2 flex justify-between">
               <span>USER_REVIEWS.LOG</span>
-              <span className="text-xs font-normal text-cr_gray mt-2">ENTRIES: 02</span>
+              <span className="text-xs font-normal text-cr_gray mt-2">ENTRIES: {reviews.length < 10 ? `0${reviews.length}` : reviews.length}</span>
             </h2>
 
-            <div className="space-y-4 mb-8">
-              <div className="border border-cr_gray p-4">
-                <div className="text-xs text-cr_green mb-2 flex justify-between">
-                  <span>NODE_USER: TARNISHED_99</span>
-                  <span className="border border-cr_green px-1">4.5/5</span>
-                </div>
-                <p className="text-sm">"Masterpiece of world design."</p>
-              </div>
-              <div className="border border-cr_gray p-4">
-                <div className="text-xs text-cr_green mb-2 flex justify-between">
-                  <span>NODE_USER: MAIDENLESS_1</span>
-                  <span className="border border-cr_green px-1">5.0/5</span>
-                </div>
-                <p className="text-sm">"Strictly required for fans of the genre."</p>
-              </div>
+            <div className="space-y-4 mb-8 max-h-[400px] overflow-y-auto pr-2" style={{ scrollbarWidth: 'thin', scrollbarColor: '#333 #000' }}>
+              {reviews.length === 0 ? (
+                <p className="text-sm text-cr_gray italic border border-cr_gray/30 p-4">
+                  > NO REVIEWS FOUND IN DATABASE.
+                </p>
+              ) : (
+                reviews.map(review => (
+                  <ReviewItem key={review.id} review={review} />
+                ))
+              )}
             </div>
 
             <button 
@@ -148,7 +155,7 @@ const GameDetails = () => {
             setShowReviewModal(false);
             setShowSuccessToast(true);
             setTimeout(() => setShowSuccessToast(false), 3000);
-            // Story 11 will add list refresh logic here
+            fetchReviews();
           }}
         />
       )}
