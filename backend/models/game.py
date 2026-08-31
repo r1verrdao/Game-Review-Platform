@@ -22,6 +22,7 @@ class GameModel(BaseModel):
     title: str
     genre: str
     difficulty: str
+    hardware_notes: Optional[str] = None
 
     class Config:
         populate_by_name = True
@@ -32,9 +33,11 @@ class GameCreate(BaseModel):
     title: str
     genre: str
     difficulty: str
+    hardware_notes: Optional[str] = None
 
 class GameResponse(BaseModel):
     id: str
     title: str
     genre: str
     difficulty: str
+    hardware_notes: Optional[str] = None

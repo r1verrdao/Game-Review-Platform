@@ -6,6 +6,7 @@ const GameForm = () => {
   const [title, setTitle] = useState('');
   const [genre, setGenre] = useState('');
   const [difficulty, setDifficulty] = useState('Medium');
+  const [hardwareNotes, setHardwareNotes] = useState('');
   const [status, setStatus] = useState({ type: '', message: '' });
 
   const handleSubmit = async (e) => {
@@ -21,7 +22,8 @@ const GameForm = () => {
       const response = await api.post('/games/', {
         title,
         genre,
-        difficulty
+        difficulty,
+        hardware_notes: hardwareNotes
       });
 
       if (response.status === 201) {
@@ -29,6 +31,7 @@ const GameForm = () => {
         setTitle('');
         setGenre('');
         setDifficulty('Medium');
+        setHardwareNotes('');
       }
     } catch (err) {
       if (err.response && err.response.data && err.response.data.detail) {
@@ -73,6 +76,16 @@ const GameForm = () => {
             <option value="Medium">Medium</option>
             <option value="Hard">Hard</option>
           </select>
+        </div>
+
+        <div className="flex flex-col mb-6">
+          <label className="mb-2 text-sm uppercase tracking-wider text-cr_gray">Hardware_Notes (Optional)</label>
+          <textarea 
+            value={hardwareNotes}
+            onChange={(e) => setHardwareNotes(e.target.value)}
+            placeholder="E.g., Requires Xbox controller, not optimized for keyboard."
+            className="w-full bg-cr_bg border border-gray-700 p-3 text-cr_gray outline-none focus:border-cr_green transition-colors font-mono h-24 resize-none"
+          />
         </div>
 
         {status.message && (
