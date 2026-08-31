@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from routes import auth, games
+from routes import auth, games, reviews
 
 app = FastAPI(title="Game Review Platform API")
 
@@ -16,6 +16,7 @@ app.add_middleware(
 # Include Routers
 app.include_router(auth.router, prefix="/api", tags=["Auth"])
 app.include_router(games.router, prefix="/api/games", tags=["Games"])
+app.include_router(reviews.router, prefix="/api/reviews", tags=["Reviews"])
 
 @app.get("/")
 async def root():
