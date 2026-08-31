@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../api';
-import StarRating from '../components/StarRating';
+import ReviewForm from '../components/ReviewForm';
 
 const GameDetails = () => {
   const { id } = useParams();
@@ -10,7 +10,7 @@ const GameDetails = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [showReviewModal, setShowReviewModal] = useState(false);
-  const [selectedRating, setSelectedRating] = useState(0);
+  const [showSuccessToast, setShowSuccessToast] = useState(false);
 
   useEffect(() => {
     const fetchGame = async () => {
@@ -139,44 +139,24 @@ const GameDetails = () => {
         </div>
       </div>
 
-      {/* Review Modal Placeholder */}
+      {/* Review Form Modal */}
       {showReviewModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
-          <div className="border border-cr_green bg-cr_bg p-8 max-w-md w-full relative">
-            <button 
-              onClick={() => setShowReviewModal(false)}
-              className="absolute top-4 right-4 text-cr_gray hover:text-cr_red"
-            >
-              [X]
-            </button>
-            <h3 className="text-xl font-bold text-cr_green mb-6 border-b border-cr_green pb-2">SUBMIT_RATING</h3>
-            
-            <div className="mb-8">
-              <p className="text-sm text-cr_gray mb-4">Select your overall impression:</p>
-              <StarRating rating={selectedRating} onRatingChange={setSelectedRating} />
-              {selectedRating > 0 && (
-                <p className="text-cr_green mt-2 text-xs">RATING_SELECTED: {selectedRating}/5</p>
-              )}
-            </div>
+        <ReviewForm 
+          gameId={id} 
+          onClose={() => setShowReviewModal(false)}
+          onSuccess={() => {
+            setShowReviewModal(false);
+            setShowSuccessToast(true);
+            setTimeout(() => setShowSuccessToast(false), 3000);
+            // Story 11 will add list refresh logic here
+          }}
+        />
+      )}
 
-            <button 
-              className={`w-full py-2 uppercase tracking-widest font-bold border transition-colors ${
-                selectedRating > 0 
-                  ? 'border-cr_green text-cr_green hover:bg-cr_green hover:text-black' 
-                  : 'border-cr_gray/30 text-cr_gray/30 cursor-not-allowed'
-              }`}
-              disabled={selectedRating === 0}
-              onClick={() => {
-                if (selectedRating > 0) {
-                  alert(`Rating ${selectedRating} logged. (API submission in Story 10)`);
-                  setShowReviewModal(false);
-                  setSelectedRating(0);
-                }
-              }}
-            >
-              [ CONFIRM_RATING ]
-            </button>
-          </div>
+      {/* Success Toast */}
+      {showSuccessToast && (
+        <div className="fixed bottom-8 right-8 bg-cr_green text-black px-6 py-4 font-bold tracking-widest shadow-lg z-50 animate-bounce">
+          REVIEW LOGGED SUCCESSFULLY!
         </div>
       )}
 

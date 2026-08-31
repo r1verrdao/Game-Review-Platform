@@ -23,6 +23,7 @@ class ReviewModel(BaseModel):
     user_id: str
     game_id: str
     rating: int = Field(ge=1, le=5)
+    content: str = Field(..., min_length=1)
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
     class Config:
@@ -33,10 +34,12 @@ class ReviewModel(BaseModel):
 class ReviewCreate(BaseModel):
     game_id: str
     rating: int = Field(ge=1, le=5)
+    content: str = Field(..., min_length=1)
 
 class ReviewResponse(BaseModel):
     id: str
     user_id: str
     game_id: str
     rating: int
+    content: str
     created_at: datetime
