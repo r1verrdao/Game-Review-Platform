@@ -20,7 +20,8 @@ async def create_game(game_data: GameCreate, current_admin: dict = Depends(get_a
     new_game = {
         "title": game_data.title,
         "genre": game_data.genre,
-        "difficulty": game_data.difficulty
+        "difficulty": game_data.difficulty,
+        "hardware_notes": game_data.hardware_notes
     }
     
     result = await games_collection.insert_one(new_game)
@@ -30,5 +31,6 @@ async def create_game(game_data: GameCreate, current_admin: dict = Depends(get_a
         id=str(created_game["_id"]),
         title=created_game["title"],
         genre=created_game["genre"],
-        difficulty=created_game["difficulty"]
+        difficulty=created_game["difficulty"],
+        hardware_notes=created_game.get("hardware_notes")
     )
